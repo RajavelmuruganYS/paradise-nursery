@@ -1,46 +1,47 @@
-import Navbar from "./Navbar";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { inc, dec, remove } from "../redux/CartSlice";
-import { Link } from "react-router-dom";
+import { removeItem, updateQuantity } from "../redux/CartSlice";
+import "../App.css";
 
-export default function Cart() {
-  const cart = useSelector(state => state.cart.items);
+function CartItem() {
   const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.cart.cartItems);
+  const totalAmount = useSelector(state => state.cart.totalAmount);
 
-  const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  const handleQuantity = (id, qty) => {
+    if (qty < 1) return;
+    dispatch(updateQuantity({ id, quantity: qty }));
+  };
 
   return (
-    <>
-      <Navbar />
-      <h3 className="cart-total">Total Cart Amount: ${total}</h3>
-
-      <div className="cart-box">
-        {cart.map(i => (
-          <div className="cart-item" key={i.id}>
-            <img src={i.img} alt={i.name} />
-            <div>
-              <h4>{i.name}</h4>
-              <p>${i.price}</p>
-              <div className="qty">
-                <button onClick={() => dispatch(dec(i.id))}>-</button>
-                {i.quantity}
-                <button onClick={() => dispatch(inc(i.id))}>+</button>
+    <div className="cart-container">
+      <h2>Shopping Cart</h2>
+      {cartItems.length === 0 ? (
+        <p>Your cart is empty</p>
+      ) : (
+        <div>
+          {cartItems.map(item => (
+            <div key={item.id} className="cart-item">
+              <img src={item.img} alt={item.name} />
+              <div className="cart-info">
+                <h3>{item.name}</h3>
+                <p>Unit Price: ₹{item.price}</p>
+                <p>Total: ₹{item.price * item.quantity}</p>
+                <div>
+                  <button onClick={() => handleQuantity(item.id, item.quantity - 1)}>-</button>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => handleQuantity(item.id, item.quantity + 1)}>+</button>
+                </div>
+                <button onClick={() => dispatch(removeItem(item.id))}>Remove</button>
               </div>
-              <p>Total: ${i.price * i.quantity}</p>
-              <button className="delete" onClick={() => dispatch(remove(i.id))}>
-                Delete
-              </button>
             </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="cart-actions">
-        <Link to="/plants">
-          <button className="green-btn">Continue Shopping</button>
-        </Link>
-        <button className="green-btn">Checkout</button>
-      </div>
-    </>
+          ))}
+          <h3>Total Amount: ₹{totalAmount}</h3>
+          <button onClick={() => alert("Checkout Coming Soon!")}>Checkout</button>
+        </div>
+      )}
+    </div>
   );
 }
+
+export default CartItem;

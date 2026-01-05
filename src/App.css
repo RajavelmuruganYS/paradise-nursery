@@ -10,7 +10,32 @@ body {
   color: #333;
 }
 
-/* ===== NAVBAR ===== */
+.landing {
+  height: 100vh;
+  background: url('./assets/landing-bg.jpg') center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+
+.get-started-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.get-started-btn:hover {
+  background-color: #45a049;
+}
+
 .navbar {
   background: linear-gradient(90deg, #2e7d32, #4caf50);
   padding: 14px 40px;
